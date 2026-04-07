@@ -15,7 +15,7 @@ LABEL_ENC    = joblib.load('label_encoder.pkl')
 FEATURE_COLS = joblib.load('feature_cols.pkl')
 COUNTRY_STATS = pd.read_csv('country_carbon_stats.csv')
 
-ELECTRICITY_MAPS_API_KEY = os.getenv('ELECTRICITY_MAPS_API_KEY', 'qsHRZZ6u9hddUerHsUb5')
+ELECTRICITY_MAPS_API_KEY = os.getenv('ELECTRICITY_MAPS_API_KEY', 'your_api_key')
 
 # ── Cloud region catalogue ────────────────────────────────────────
 CLOUD_REGIONS = {
