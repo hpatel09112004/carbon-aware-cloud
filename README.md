@@ -32,10 +32,10 @@ This generates: `carbon_model.pkl`, `label_encoder.pkl`, `feature_cols.pkl`, `co
 **Model Results:**
 | Model             | MAE   | RMSE  | R²     |
 |-------------------|-------|-------|--------|
-| Linear Regression | 5.293 | 6.848 | 0.9103 |
-| Decision Tree     | 0.835 | 1.235 | 0.9971 |
-| **Random Forest** | **0.346** | **0.553** | **0.9994** ← CHOSEN |
-| Gradient Boosting | 0.678 | 0.960 | 0.9982 |
+| Linear Regression | 5.329 | 6.878 | 0.9096 |
+| Decision Tree     | 0.812 | 1.230 | 0.9971 |
+| **Random Forest** | **0.321** | **0.501** | **0.9995** ← CHOSEN |
+| Gradient Boosting | 0.502 | 0.713 | 0.9990 |
 
 ---
 
