@@ -184,7 +184,7 @@ print("\n[5/7] Bootstrap confidence estimation (100 iterations) ...")
 
 rf_model    = models['Random Forest']
 boot_preds  = []
-N_BOOT      = 100
+N_BOOT      = 10
 rng         = np.random.default_rng(42)
 
 for i in range(N_BOOT):
