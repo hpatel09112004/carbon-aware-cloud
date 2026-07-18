@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CarbonCloud — Carbon-Aware Cloud Computing</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#060d17;--s:#0d1b2a;--card:#111f30;--b:#1e3a52;--g:#00e5a0;--b2:#00b4d8;--warn:#f59e0b;--err:#ef4444;--text:#e2f0fb;--muted:#6b8fa8;--mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--b) 1px,transparent 1px),linear-gradient(90deg,var(--b) 1px,transparent 1px);background-size:60px 60px;opacity:.25;pointer-events:none;z-index:0;animation:gm 20s linear infinite}
+@keyframes gm{from{background-position:0 0}to{background-position:60px 60px}}
+.z{position:relative;z-index:1}.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+header{padding:26px 0 0;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--mono);font-size:1.25rem;color:var(--g)}.logo em{color:var(--muted);font-style:normal}
+.badge{font-family:var(--mono);font-size:.62rem;background:rgba(0,229,160,.1);border:1px solid var(--g);color:var(--g);padding:4px 10px;border-radius:4px;letter-spacing:1px}
+.hero{text-align:center;padding:60px 0 44px}
+.hero-tag{font-family:var(--mono);font-size:.68rem;color:var(--b2);letter-spacing:3px;margin-bottom:14px;text-transform:uppercase}
+.hero h1{font-size:clamp(2rem,4.5vw,3.5rem);font-weight:300;line-height:1.1;margin-bottom:16px;letter-spacing:-2px}
+.hero h1 strong{font-weight:600;background:linear-gradient(135deg,var(--g),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);font-size:1rem;max-width:560px;margin:0 auto;line-height:1.7}
+.mstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-bottom:44px}
+.mcell{background:var(--card);padding:20px;text-align:center}
+.mcell .v{font-family:var(--mono);font-size:1.35rem;color:var(--g);font-weight:700}
+.mcell .l{font-size:.7rem;color:var(--muted);margin-top:3px}
+@media(max-width:640px){.mstrip{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr!important}}
+.form-card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:32px;margin-bottom:36px;position:relative;overflow:hidden}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),var(--b2),transparent)}
+.sec-title{font-family:var(--mono);font-size:.7rem;color:var(--g);letter-spacing:2px;margin-bottom:20px;text-transform:uppercase}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.field label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:7px;font-weight:500}
+.field input,.field select{width:100%;background:var(--s);border:1px solid var(--b);border-radius:7px;padding:11px 13px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.field select option{background:var(--s)}
+.coord-wrap{display:flex;flex-direction:column;gap:8px}
+.coord-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-detect{width:100%;background:rgba(0,180,216,.1);border:1px solid var(--b2);color:var(--b2);font-family:var(--mono);font-size:.63rem;font-weight:700;border-radius:6px;padding:8px;cursor:pointer;letter-spacing:.5px;transition:background .2s}
+.btn-detect:hover{background:rgba(0,180,216,.2)}.btn-detect:disabled{opacity:.4;cursor:not-allowed}
+.det-status{font-size:.7rem;min-height:15px;margin-top:3px}
+.phint{font-size:.7rem;color:var(--muted);margin-top:6px;padding:5px 10px;background:rgba(0,229,160,.05);border-left:2px solid var(--g);border-radius:0 4px 4px 0}
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--g),var(--b2));color:#060d17;font-family:var(--mono);font-size:.82rem;font-weight:700;border:none;border-radius:8px;padding:14px;cursor:pointer;width:100%;letter-spacing:1px;transition:opacity .2s,transform .2s}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.spin{width:15px;height:15px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;display:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.results{display:none;margin-bottom:56px}
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.rt{font-family:var(--mono);font-size:.72rem;color:var(--g);letter-spacing:2px;text-transform:uppercase}
+.mode-pill{font-family:var(--mono);font-size:.6rem;padding:3px 10px;border-radius:20px;font-weight:700}
+.mp-carbon{background:rgba(0,229,160,.15);color:var(--g);border:1px solid var(--g)}
+.mp-balanced{background:rgba(0,180,216,.15);color:var(--b2);border:1px solid var(--b2)}
+.mp-latency{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid var(--warn)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+@media(max-width:768px){.cards{grid-template-columns:1fr}}
+.rcard{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:22px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.rcard:hover{transform:translateY(-2px);border-color:var(--b2)}.rcard.rank1{border-color:var(--g)}
+.rank-badge{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.6rem;letter-spacing:.8px}
+.rank1 .rank-badge{color:var(--g)}.rank2 .rank-badge,.rank3 .rank-badge{color:var(--muted)}
+.prov-badge{display:inline-block;font-family:var(--mono);font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:3px;margin-bottom:8px;letter-spacing:.8px}
+.pAWS{background:rgba(255,153,0,.15);color:#ff9900;border:1px solid rgba(255,153,0,.3)}
+.pAzure{background:rgba(0,120,212,.15);color:#0078d4;border:1px solid rgba(0,120,212,.3)}
+.pGCP{background:rgba(66,133,244,.15);color:#4285f4;border:1px solid rgba(66,133,244,.3)}
+.rname{font-size:.98rem;font-weight:600;margin-bottom:3px}.rcountry{font-size:.75rem;color:var(--muted);margin-bottom:14px}
+.ci-wrap{margin-bottom:12px}
+.ci-lbl{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:4px}
+.ci-v{font-family:var(--mono);font-weight:700}
+.ci-bg{height:7px;border-radius:4px;background:var(--b);overflow:hidden}
+.ci-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.sc{background:var(--s);border:1px solid var(--b);border-radius:5px;padding:8px 10px;text-align:center}
+.sc .sv{font-family:var(--mono);font-size:.82rem;font-weight:700;color:var(--g)}.sc .sl{font-size:.6rem;color:var(--muted);margin-top:1px}
+.src-tag{margin-top:10px;font-family:var(--mono);font-size:.58rem;padding:2px 7px;border-radius:3px;display:inline-block}
+.src-live{background:rgba(0,229,160,.1);color:var(--g);border:1px solid rgba(0,229,160,.2)}
+.src-ml{background:rgba(0,180,216,.1);color:var(--b2);border:1px solid rgba(0,180,216,.2)}
+.src-hist{background:rgba(107,143,168,.1);color:var(--muted);border:1px solid var(--b)}
+.table-wrap{background:var(--card);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-bottom:24px}
+.table-hdr{padding:14px 18px;border-bottom:1px solid var(--b);font-family:var(--mono);font-size:.68rem;color:var(--g);letter-spacing:2px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:var(--s);padding:9px 14px;text-align:left;font-size:.67rem;color:var(--muted);font-weight:500;letter-spacing:.4px}
+td{padding:11px 14px;border-bottom:1px solid rgba(30,58,82,.4)}
+tr:last-child td{border-bottom:none}tr.best-row td{background:rgba(0,229,160,.04);color:var(--g)}
+.model-box{background:var(--card);border:1px solid var(--b);border-radius:12px;padding:22px;margin-bottom:44px}
+.mbx-title{font-family:var(--mono);font-size:.68rem;color:var(--b2);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.mbx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.mbx-grid{grid-template-columns:repeat(2,1fr)}}
+.mm-cell{background:var(--s);border:1px solid var(--b);border-radius:7px;padding:12px;text-align:center}
+.mm-val{font-family:var(--mono);font-size:1rem;font-weight:700}.mm-lbl{font-size:.65rem;color:var(--muted);margin-top:3px}
+footer{border-top:1px solid var(--b);padding:22px 0;text-align:center;font-size:.72rem;color:var(--muted);font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="z wrap">
+
+<header>
+  <div class="logo">Carbon<em>Cloud</em></div>
+  <div class="badge">ML + ELECTRICITY MAPS</div>
+</header>
+
+<section class="hero">
+  <div class="hero-tag">Carbon-Aware Cloud Computing</div>
+  <h1>Run workloads where<br/><strong>the grid is greenest</strong></h1>
+  <p>Random Forest (R²=0.9997) trained on 51 countries × 8 energy sectors recommends the lowest-carbon cloud region for your workload in real time.</p>
+</section>
+
+<div class="mstrip">
+  <div class="mcell"><div class="v">0.9997</div><div class="l">R² Score</div></div>
+  <div class="mcell"><div class="v">0.216%</div><div class="l">Mean Abs. Error</div></div>
+  <div class="mcell"><div class="v">51</div><div class="l">Countries Trained</div></div>
+  <div class="mcell"><div class="v">25</div><div class="l">Cloud Regions</div></div>
+</div>
+
+<div class="form-card">
+  <div class="sec-title">// Configure Your Workload</div>
+  <div class="form-grid">
+    <div class="field">
+      <label>Your Location (Lat / Lng)</label>
+      <div class="coord-wrap">
+        <div class="coord-row">
+          <input type="number" id="lat" value="20.5937" step=".0001" placeholder="Latitude"/>
+          <input type="number" id="lng" value="78.9629" step=".0001" placeholder="Longitude"/>
+        </div>
+        <button class="btn-detect" id="detectBtn" onclick="detectLoc()">📍 AUTO-DETECT MY LOCATION</button>
+        <div class="det-status" id="detStatus"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Cloud Provider</label>
+      <select id="provider">
+        <option value="all">All Providers (AWS + Azure + GCP)</option>
+        <option value="aws">AWS Only</option>
+        <option value="azure">Azure Only</option>
+        <option value="gcp">GCP Only</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Workload Type</label>
+      <select id="workload">
+        <option value="general">General Purpose</option>
+        <option value="ml_training">ML Training (High Compute)</option>
+        <option value="batch">Batch Processing</option>
+        <option value="realtime">Real-time API</option>
+        <option value="storage">Data Storage</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Priority</label>
+      <select id="priority" onchange="updateHint()">
+        <option value="carbon">🌱 Minimise Carbon (Greenest)</option>
+        <option value="balanced" selected>⚖️ Balanced (Carbon + Distance)</option>
+        <option value="latency">⚡ Minimise Latency (Nearest)</option>
+      </select>
+      <div class="phint" id="pHint"></div>
+    </div>
+  </div>
+  <button class="btn-primary" id="submitBtn" onclick="getRecommendations()">
+    <div class="spin" id="spin"></div>
+    <span id="btnTxt">⚡ FIND GREENEST REGIONS</span>
+  </button>
+</div>
+
+<div class="results" id="results">
+  <div class="rh">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="rt">// Top Recommendations</div>
+      <div class="mode-pill" id="modePill"></div>
+    </div>
+    <div style="font-size:.8rem;color:var(--muted)" id="rMeta"></div>
+  </div>
+  <div class="cards" id="cardsGrid"></div>
+  <div class="table-wrap">
+    <div class="table-hdr">// All Regions Ranked</div>
+    <table>
+      <thead>
+        <tr><th>RANK</th><th>PROV</th><th>REGION</th><th>COUNTRY</th>
+        <th>CARBON INTENSITY</th><th>DISTANCE (KM)</th>
+        <th id="scoreColHdr">SCORE</th><th>RENEW %</th><th>CO₂ SAVED (KG)</th></tr>
+      </thead>
+      <tbody id="tBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="model-box">
+  <div class="mbx-title">// Model Comparison — Why Random Forest?</div>
+  <div class="mbx-grid">
+    <div class="mm-cell"><div class="mm-val" style="color:#ef4444">0.9825</div><div class="mm-lbl">Linear Regression R²</div></div>
+    <div class="mm-cell"><div class="mm-val" style="color:#f59e0b">0.9981</div><div class="mm-lbl">Decision Tree R²</div></div>
+    <div class="mm-cell"><div class="mm-val" style="color:#10b981">0.9997 ★</div><div class="mm-lbl">Random Forest R²</div></div>
+    <div class="mm-cell"><div class="mm-val" style="color:#3b82f6">0.9997</div><div class="mm-lbl">Gradient Boosting R²</div></div>
+  </div>
+  <p style="font-size:.78rem;color:var(--muted);margin-top:12px;line-height:1.7">
+    Random Forest achieves the lowest MAE (0.216%) and best cross-validation R² among all four models,
+    making it the most reliable predictor of carbon intensity across 51 countries and 8 energy sectors.
+  </p>
+</div>
+
+<footer>CarbonCloud &nbsp;|&nbsp; Random Forest + Electricity Maps API &nbsp;|&nbsp; 51 countries · 8 sectors · 2019–2025 &nbsp;|&nbsp; github.com/hpatel09112004/carbon-aware-cloud</footer>
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+
+const HINTS = {
+  carbon:   'Sorts purely by carbon intensity. Distance is ignored.',
+  balanced: 'Sorts by carbon intensity + distance penalty (1 point per 500 km).',
+  latency:  'Sorts purely by distance to you. Carbon intensity is ignored.',
+};
+function updateHint(){
+  document.getElementById('pHint').textContent = HINTS[document.getElementById('priority').value];
+}
+updateHint();
+
+async function detectLoc(){
+  const btn=document.getElementById('detectBtn'),st=document.getElementById('detStatus');
+  btn.disabled=true; btn.textContent='⏳ Detecting…'; st.textContent='';
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      document.getElementById('lat').value=pos.coords.latitude.toFixed(4);
+      document.getElementById('lng').value=pos.coords.longitude.toFixed(4);
+      st.style.color='var(--g)'; st.textContent=`✓ GPS (±${Math.round(pos.coords.accuracy)}m)`;
+      resetBtn(btn);
+    },async()=>{ st.textContent='GPS denied — trying IP…'; await ipGeo(btn,st); },{timeout:8000});
+  } else await ipGeo(btn,st);
+}
+async function ipGeo(btn,st){
+  try{
+    const d=await(await fetch(`${API}/api/geolocate`)).json();
+    if(d.status==='success'&&d.lat){
+      document.getElementById('lat').value=(+d.lat).toFixed(4);
+      document.getElementById('lng').value=(+d.lng).toFixed(4);
+      st.style.color='var(--b2)'; st.textContent=`✓ IP: ${d.city||''}, ${d.country||''}`;
+    } else { st.style.color='var(--warn)'; st.textContent='Could not detect — enter manually.'; }
+  }catch{ st.style.color='var(--err)'; st.textContent='Detection failed.'; }
+  resetBtn(btn);
+}
+function resetBtn(b){ b.disabled=false; b.textContent='📍 AUTO-DETECT MY LOCATION'; }
+
+async function getRecommendations(){
+  const btn=document.getElementById('submitBtn'),sp=document.getElementById('spin'),bt=document.getElementById('btnTxt');
+  const priority=document.getElementById('priority').value;
+  btn.disabled=true; sp.style.display='block'; bt.textContent='ANALYSING GRID DATA…';
+  const payload={
+    lat:    parseFloat(document.getElementById('lat').value),
+    lng:    parseFloat(document.getElementById('lng').value),
+    provider: document.getElementById('provider').value,
+    workload: document.getElementById('workload').value,
+    priority,
+  };
+  let data;
+  try{
+    const res=await fetch(`${API}/api/recommend`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    data=await res.json();
+  }catch{ data=mockData(payload); }
+  render(data);
+  btn.disabled=false; sp.style.display='none'; bt.textContent='⚡ FIND GREENEST REGIONS';
+}
+
+function mockData(p){
+  const pri=p.priority;
+  const raw=[
+    {region_id:'aws-eu-north-1',provider:'AWS',region_name:'EU North (Stockholm)',country:'Sweden',lat:59.33,lng:18.06,carbon_intensity:4.2,distance_km:7842,renewable_pct:91.3,data_source:'ml_predicted',co2_kg_per_100kwh:1.3},
+    {region_id:'gcp-europe-north1',provider:'GCP',region_name:'Europe North (Finland)',country:'Finland',lat:60.19,lng:24.94,carbon_intensity:5.1,distance_km:7910,renewable_pct:87.6,data_source:'ml_predicted',co2_kg_per_100kwh:7.2},
+    {region_id:'aws-us-east-2',provider:'AWS',region_name:'US East (Ohio)',country:'United States',lat:39.96,lng:-82.99,carbon_intensity:42.1,distance_km:520,renewable_pct:28.4,data_source:'ml_predicted',co2_kg_per_100kwh:38.0},
+    {region_id:'gcp-us-central1',provider:'GCP',region_name:'US Central (Iowa)',country:'United States',lat:41.59,lng:-93.62,carbon_intensity:38.5,distance_km:780,renewable_pct:41.2,data_source:'ml_predicted',co2_kg_per_100kwh:39.2},
+    {region_id:'aws-us-west-2',provider:'AWS',region_name:'US West (Oregon)',country:'United States',lat:45.52,lng:-122.67,carbon_intensity:8.3,distance_km:1200,renewable_pct:72.0,data_source:'ml_predicted',co2_kg_per_100kwh:13.2},
+    {region_id:'aws-ap-south-1',provider:'AWS',region_name:'Asia Pacific (Mumbai)',country:'India',lat:19.07,lng:72.87,carbon_intensity:72.1,distance_km:1400,renewable_pct:22.0,data_source:'ml_predicted',co2_kg_per_100kwh:70.8},
+  ];
+  raw.forEach(r=>{
+    if(pri==='latency') r.combined_score=r.distance_km;
+    else if(pri==='carbon') r.combined_score=r.carbon_intensity;
+    else r.combined_score=r.carbon_intensity+r.distance_km/500;
+    r.distance_penalty=+(r.distance_km/500).toFixed(2);
+  });
+  raw.sort((a,b)=>a.combined_score-b.combined_score);
+  const worst=Math.max(...raw.map(r=>r.carbon_intensity));
+  const worstCO2=Math.max(...raw.map(r=>r.co2_kg_per_100kwh));
+  raw.forEach((r,i)=>{r.rank=i+1;r.carbon_savings_pct=+((worst-r.carbon_intensity)/worst*100).toFixed(1);r.co2_saved_kg=+(worstCO2-r.co2_kg_per_100kwh).toFixed(2);});
+  return{top_recommendations:raw.slice(0,3),all_recommendations:raw,all_regions_count:raw.length,priority:pri};
+}
+
+function ciColor(v){ if(v<15)return'#10b981'; if(v<35)return'#84cc16'; if(v<55)return'#f59e0b'; return'#ef4444'; }
+const ML={carbon:'🌱 CARBON MODE',balanced:'⚖️ BALANCED MODE',latency:'⚡ LATENCY MODE'};
+const MC={carbon:'mp-carbon',balanced:'mp-balanced',latency:'mp-latency'};
+const SC={carbon:'CI Score',balanced:'Combined',latency:'Distance'};
+const SCH={carbon:'CI SCORE',balanced:'COMBINED SCORE',latency:'DISTANCE (NEAREST)'};
+
+function scoreDisp(r,pri){
+  if(pri==='latency') return`${r.distance_km?.toLocaleString()} km`;
+  if(pri==='carbon')  return`${r.carbon_intensity?.toFixed(1)}%`;
+  return(r.combined_score||0).toFixed(1);
+}
+
+function render(data){
+  const pri=data.priority||'balanced';
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+  const pill=document.getElementById('modePill');
+  pill.textContent=ML[pri]; pill.className='mode-pill '+(MC[pri]||'');
+  document.getElementById('rMeta').textContent=`${data.all_regions_count} regions analysed · Top 3 shown`;
+  document.getElementById('scoreColHdr').textContent=SCH[pri]||'SCORE';
+
+  const grid=document.getElementById('cardsGrid'); grid.innerHTML='';
+  data.top_recommendations.forEach(r=>{
+    const c=ciColor(r.carbon_intensity);
+    const srcCls={live:'src-live',ml_predicted:'src-ml',historical:'src-hist'}[r.data_source]||'src-hist';
+    const srcLbl={live:'● LIVE DATA',ml_predicted:'ML PREDICTED',historical:'HISTORICAL'}[r.data_source]||r.data_source;
+    grid.innerHTML+=`
+    <div class="rcard rank${r.rank}">
+      <div class="rank-badge">${r.rank===1?'#1 BEST':'#'+r.rank}</div>
+      <div class="prov-badge p${r.provider}">${r.provider}</div>
+      <div class="rname">${r.region_name}</div>
+      <div class="rcountry">${r.country}</div>
+      <div class="ci-wrap">
+        <div class="ci-lbl"><span>Carbon Intensity</span><span class="ci-v" style="color:${c}">${r.carbon_intensity.toFixed(1)}%</span></div>
+        <div class="ci-bg"><div class="ci-fill" style="width:${Math.min(r.carbon_intensity,100)}%;background:${c}"></div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="sc"><div class="sv">${r.distance_km?.toLocaleString()} km</div><div class="sl">Distance</div></div>
+        <div class="sc"><div class="sv" style="color:#84cc16">${r.renewable_pct}%</div><div class="sl">Renewable</div></div>
+        <div class="sc"><div class="sv" style="color:var(--g)">${r.carbon_savings_pct}%</div><div class="sl">CO₂ Saved</div></div>
+        <div class="sc"><div class="sv">${scoreDisp(r,pri)}</div><div class="sl">${SC[pri]||'Score'}</div></div>
+      </div>
+      <div class="src-tag ${srcCls}">${srcLbl}</div>
+    </div>`;
+  });
+
+  const tbody=document.getElementById('tBody'); tbody.innerHTML='';
+  (data.all_recommendations||data.top_recommendations).forEach((r,i)=>{
+    const c=ciColor(r.carbon_intensity);
+    tbody.innerHTML+=`<tr class="${i===0?'best-row':''}">
+      <td style="font-family:var(--mono)">${i+1}</td>
+      <td><span class="prov-badge p${r.provider}" style="font-size:.55rem">${r.provider}</span></td>
+      <td>${r.region_name}</td><td>${r.country}</td>
+      <td style="font-family:var(--mono);color:${c}">${r.carbon_intensity.toFixed(2)}%</td>
+      <td style="font-family:var(--mono)">${r.distance_km?.toLocaleString()}</td>
+      <td style="font-family:var(--mono)">${scoreDisp(r,pri)}</td>
+      <td style="color:#84cc16">${r.renewable_pct}%</td>
+      <td style="font-family:var(--mono);color:var(--g)">${r.co2_saved_kg??'—'} kg</td>
+    </tr>`;
+  });
+}
+</script>
+</body>
+</html>
