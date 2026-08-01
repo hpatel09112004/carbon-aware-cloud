@@ -562,5 +562,3 @@ MIT License — free to use, modify, and distribute.
 - **Global Energy Dataset** — 51 countries, 8 sectors, 2019–2025
 
 ---
-
-*Built for BCSE408L — Cloud Computing | VIT University, Vellore*
