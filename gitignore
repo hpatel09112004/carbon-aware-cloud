@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Model artefacts (large files — regenerate with train_model.py)
+*.pkl
+
+# Dataset (too large for GitHub — provide separately)
+*.csv
+
+# Logs
+*.log
+app.log
+nohup.out
+
+# Environment variables / API keys — NEVER commit these
+.env
+.env.local
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Generated images (optional — can commit if you want)
+# model_comparison.png
