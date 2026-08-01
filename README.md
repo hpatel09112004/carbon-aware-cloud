@@ -25,7 +25,6 @@
 - [API Reference](#-api-reference)
 - [Model Performance](#-model-performance)
 - [Deployment on AWS EC2](#-deployment-on-aws-ec2)
-- [Pushing to GitHub](#-pushing-to-github)
 - [Troubleshooting](#-troubleshooting)
 
 ---
